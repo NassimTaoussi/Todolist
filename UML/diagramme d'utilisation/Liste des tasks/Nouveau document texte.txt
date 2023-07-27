@@ -1,0 +1,22 @@
+@startuml
+
+left to right direction
+:User: #lightseagreen;line:lightseagreen;line.bold;text:lightseagreen
+:Admin: #red;line:red;line.bold;text:red
+
+User<|-- Admin
+
+rectangle "Application" {
+
+User--> (Liste des tasks) #lightseagreen;line:lightseagreen;line.bold;text:lightseagreen
+
+(Liste des tasks) <.. (Lire une task) #dodgerblue;line.dashed;text:dodgerblue : extends
+(Liste des tasks) <.. (Modifier une task) #dodgerblue;line.dashed;text:dodgerblue : extends
+(Liste des tasks) <.. (Supprimer une task) #dodgerblue;line.dashed;text:dodgerblue : extends
+
+(Se connecter) ..> (S'inscrire) #dodgerblue;line.dashed;text:dodgerblue : include
+(Supprimer une task) ..> (Se connecter) #dodgerblue;line.dashed;text:dodgerblue : include
+(Modifier une task) ..> (Se connecter) #dodgerblue;line.dashed;text:dodgerblue : include
+(Lire une task) ..> (Se connecter) #dodgerblue;line.dashed;text:dodgerblue : include
+
+}

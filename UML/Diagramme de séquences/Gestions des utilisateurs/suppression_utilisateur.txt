@@ -1,0 +1,14 @@
+@startuml
+
+actor Admin#salmon
+control Systeme #dodgerblue
+database Database #olive
+note over Admin: Status connecter
+ref over Admin: Diagramme de séquence "Liste des utilisateurs"
+
+Admin-> Systeme : Demande de suppression du user
+Systeme -> Database : Suppression en base de données
+Systeme -> Admin: Message de confirmation
+
+
+@enduml

@@ -1,0 +1,14 @@
+@startuml
+
+actor Admin #salmon
+control Systeme #dodgerblue
+database Database #olive
+note over Admin: Status connecter
+
+Admin -> Systeme :  Demande la liste des utilisateurs
+Systeme -> Database : Récupération de la liste des utilisateurs
+Database -> Systeme : Renvoie la liste des utilisateurs
+Systeme -> Admin :  Renvoie la liste des utilisateurs
+
+@enduml
+

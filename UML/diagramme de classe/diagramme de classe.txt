@@ -1,0 +1,22 @@
+@startuml
+
+User "1" -- "0 *" Task
+
+class Task #E0FFFF {
+int id
+Datetime createdAt
+String title
+text content
+bool isDone
+User|null author
+}
+
+class User #CD5C5C {
+int id
+String username
+String password
+String email
+String role
+}
+
+@enduml

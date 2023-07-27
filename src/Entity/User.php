@@ -16,16 +16,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $id = null;
+    private int $id;
 
     #[ORM\Column(length: 255)]
-    private ?string $username = null;
+    private string $username;
 
     #[ORM\Column(length: 64)]
-    private ?string $password = null;
+    private string $password;
 
     #[ORM\Column(length: 60)]
-    private ?string $email = null;
+    private string $email;
+
+    #[ORM\Column(length: 30)]
+    private string $role;
 
     public function getId(): ?int
     {
@@ -85,6 +88,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function eraseCredentials()
     {
+    }
+
+    public function getRole(): ?string
+    {
+        return $this->role;
+    }
+
+    public function setRole(?string $role): static
+    {
+        $this->role = $role;
+
+        return $this;
     }
 
 

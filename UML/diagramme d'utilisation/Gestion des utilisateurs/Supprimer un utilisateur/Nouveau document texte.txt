@@ -1,0 +1,16 @@
+@startuml
+
+left to right direction
+:Admin: #red;line:red;line.bold;text:red
+
+rectangle "Application" {
+
+Admin--> (Geré les utlisateurs) #red;line:red;line.bold;text:red
+
+
+(Geré les utlisateurs) <.. (Supprimer un utilisateur) #dodgerblue;line.dashed;text:dodgerblue : extends
+
+(Se connecter) ..> (S'inscrire) #dodgerblue;line.dashed;text:dodgerblue : include
+(Supprimer un utilisateur) ..> (Se connecter) #dodgerblue;line.dashed;text:dodgerblue : include
+
+}
