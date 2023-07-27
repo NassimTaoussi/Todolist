@@ -12,19 +12,19 @@ class Task
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private int $id;
+    private ?int $id = null;
 
     #[ORM\Column]
-    private \DateTimeImmutable $createdAt;
+    private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column(length: 255)]
-    private string $title;
+    private ?string $title= null;
 
     #[ORM\Column(type: Types::TEXT)]
-    private string $content;
+    private ?string $content = null;
 
     #[ORM\Column(nullable: true)]
-    private bool $isDone;
+    private ?bool $isDone = null;
 
     public function getId(): ?int
     {

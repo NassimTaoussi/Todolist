@@ -19,16 +19,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private int $id;
 
     #[ORM\Column(length: 255)]
-    private string $username;
+    private ?string $username = null;
 
     #[ORM\Column(length: 64)]
-    private string $password;
+    private ?string $password = null;
 
     #[ORM\Column(length: 60)]
-    private string $email;
+    private ?string $email = null;
 
     #[ORM\Column(length: 30)]
-    private string $role;
+    private ?string $role = null;
 
     public function getId(): ?int
     {

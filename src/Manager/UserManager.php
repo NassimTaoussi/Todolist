@@ -13,16 +13,22 @@ final class UserManager
     public function __construct(
         private Security $security,
         private EntityManagerInterface $entityManager,
-        UserPasswordHasherInterface $userPasswordHasher,
+        private UserPasswordHasherInterface $passwordHasher,
     ) {
     }
 
     public function add(User $user) {
         //dump($user);
         //exit();
+
+        $hashedPassword = $this->passwordHasher->hashPassword(
+            $user,
+            $user->getPassword()
+        );
+
         $user->setUsername($user->getUsername());
         $user->setEmail($user->getEmail());
-        $user->setPassword($user->getUsername());
+        $user->setPassword($hashedPassword);
         $user->setRole($user->getRole());
 
 

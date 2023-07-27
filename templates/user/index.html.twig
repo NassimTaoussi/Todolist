@@ -5,9 +5,32 @@
 {% block body %}
 
     <section class="row d-flex justify-content-center">
-        <div class="col-6 d-flex justify-content-center">
-            <a class="btn btn-info" href="{{ path('create_user') }}">Crée un utilisateur</a>
+        <div class="col-6 d-flex justify-content-center mt-5">
+            <a class="btn bg-secondary" href="{{ path('create_user') }}">Crée un utilisateur</a>
         </div>
+
+        <table class="table bg-secondary mt-5">
+            <thead>
+                <tr>
+                    <th class="text-center" scope="col">Pseudo</th>
+                    <th class="text-center" scope="col">Email</th>
+                    <th class="text-center" scope="col">Rôle</th>
+                    <th class="text-center" scope="col">Modifier</th>
+                    <th class="text-center" scope="col">Supprimer</th>
+                </tr>
+            </thead>
+            <tbody class="bg-white">
+                {% for user in users %}
+                <tr class="">
+                    <td class="text-center">{{ user.username }}</td>
+                    <td class="text-center">{{ user.email }}</td>
+                    <td class="text-center">{{ (user.role == "ROLE_ADMIN" ) ? 'Administrateur' : 'Utilisateur' }}</td>
+                    <td class="text-center"><a href="{{ path('edit_user', {'id' : user.id}) }}"><img src="{{ asset('build/images/edit.svg') }}"></a></td>
+                    <td class="text-center"><a href="{{ path('delete_user', {'id' : user.id}) }}"><img src="{{ asset('build/images/delete.svg') }}"></a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </section>
 
 {% endblock %}
