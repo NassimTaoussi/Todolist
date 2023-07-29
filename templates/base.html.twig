@@ -39,6 +39,10 @@
                             <li class="nav-item">
                                 <a class="nav-link text-white" href="{{ path('login') }}">Connexion</a>
                             </li>
+                        {% else %}
+                            <li class="nav-item">
+                                <a class="nav-link btn text-white" href="{{ path('logout') }}">Deconnexion</a>
+                            </li>
                         {% endif %}
                     </ul>
                     {# <form class="d-flex">

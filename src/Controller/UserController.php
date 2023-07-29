@@ -10,12 +10,11 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 class UserController extends AbstractController
 {
-    /**
-     * @Route("/users", name="users")
-     */
+    #[Route('/users', name: 'users')]
     public function index(UserRepository $userRepository): Response
     {
 
@@ -26,9 +25,8 @@ class UserController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/users/create", name="create_user")
-     */
+    #[Route('/users/create', name: 'create_user')]
+    #[IsGranted("ROLE_ADMIN")]
     public function createUser(Request $request, UserManager $userManager): Response
     {
         $user = new User();
@@ -48,9 +46,8 @@ class UserController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/users/edit/{id}", name="edit_user")
-     */
+    #[Route('/users/edit/{id}', name: 'edit_user')]
+    #[IsGranted("ROLE_ADMIN")]
     public function editUser(int $id, UserRepository $userRepository, Request $request, UserManager $userManager): Response
     {
         $user = $userRepository->findOneBy(['id' => $id]);
@@ -70,9 +67,8 @@ class UserController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/users/delete/{id}", name="delete_user")
-     */
+    #[Route('/users/delete/{id}', name: 'delete_user')]
+    #[IsGranted("ROLE_ADMIN")]
     public function deleteUser(int $id, UserRepository $userRepository): Response
     {
         $userRepository->deleteOneUserById($id);
