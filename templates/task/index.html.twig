@@ -1,20 +1,34 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello TaskController!{% endblock %}
+{% block title %}Liste des tâches{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+    <section class="row d-flex justify-content-center">
+        <div class="col-6 d-flex justify-content-center mt-5">
+            <a class="btn bg-secondary" href="{{ path('create_task') }}">Crée une tâche</a>
+        </div>
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code><a href="{{ '/home/nassim/site/todolist/src/Controller/TaskController.php'|file_link(0) }}">src/Controller/TaskController.php</a></code></li>
-        <li>Your template at <code><a href="{{ '/home/nassim/site/todolist/templates/task/index.html.twig'|file_link(0) }}">templates/task/index.html.twig</a></code></li>
-    </ul>
-</div>
+        <table class="table bg-secondary mt-5">
+            <thead>
+                <tr>
+                    <th class="text-center" scope="col">Auteur</th>
+                    <th class="text-center" scope="col">Titre</th>
+                    <th class="text-center" scope="col">Modifier</th>
+                    <th class="text-center" scope="col">Supprimer</th>
+                </tr>
+            </thead>
+            <tbody class="bg-white">
+                {% for task in tasks %}
+                <tr class="">
+                    <td class="text-center">{{ task.author.username }}</td>
+                    <td class="text-center"><a href="{{ path('show_task', {'id' : task.id}) }}" >{{ task.title }}</a></td>
+                    <td class="text-center"><a href="{{ path('edit_task', {'id' : task.id}) }}"><img src="{{ asset('build/images/edit.svg') }}"></a></td>
+                    <td class="text-center"><a href="{{ path('delete_task', {'id' : task.id}) }}"><img src="{{ asset('build/images/delete.svg') }}"></a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
+
 {% endblock %}

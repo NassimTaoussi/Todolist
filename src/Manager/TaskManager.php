@@ -3,8 +3,9 @@
 namespace App\Manager;
 
 use App\Entity\Task;
+use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Security\Core\Security;
 
 final class TaskManager
 {
@@ -15,12 +16,20 @@ final class TaskManager
     ) {
     }
 
-    public function add() {
+    public function add($task, $user) {
+        //dump($task);
+        //exit();
 
+        $task->setCreatedAt(new DateTimeImmutable());
+        $task->setIsDone(false);
+        $task->setAuthor($user);
+
+        $this->entityManager->persist($task);
+        $this->entityManager->flush();
     }
 
-    public function update() {
-
+    public function update($task) {
+        $this->entityManager->flush();
     }
 
 }

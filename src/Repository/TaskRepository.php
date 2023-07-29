@@ -21,6 +21,15 @@ class TaskRepository extends ServiceEntityRepository
         parent::__construct($registry, Task::class);
     }
 
+    public function deleteOneTaskById($id) {
+        return $this->createQueryBuilder('t')
+            ->delete()
+            ->where('t.id = :id')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->execute();
+    }
+
 //    /**
 //     * @return Task[] Returns an array of Task objects
 //     */

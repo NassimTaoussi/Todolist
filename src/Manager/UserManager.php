@@ -26,10 +26,10 @@ final class UserManager
             $user->getPassword()
         );
 
-        $user->setUsername($user->getUsername());
-        $user->setEmail($user->getEmail());
+        //$user->setUsername($user->getUsername());
+        //$user->setEmail($user->getEmail());
         $user->setPassword($hashedPassword);
-        $user->setRole($user->getRole());
+        //$user->setRole($user->getRole());
 
 
         $this->entityManager->persist($user);
