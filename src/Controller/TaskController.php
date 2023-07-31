@@ -68,8 +68,15 @@ class TaskController extends AbstractController
     #[Route('/tasks/delete/{id}', name: 'delete_task')]
     public function deleteTask(int $id, TaskRepository $taskRepository): Response
     {
-        $taskRepository->deleteOneTaskById($id);
+        $task = $taskRepository->findOneBy(['id' => $id]);
 
+        if ($task->getAuthor() !== $this->getUser()) {
+            $this->addFlash('error', 'Vous ne pouvez pas supprimer cette tâche.');
+            return $this->redirectToRoute('tasks');
+        }
+
+        $taskRepository->deleteOneTaskById($id);
+        $this->addFlash('success', 'La tâche a bien été supprimée.');
         return $this->redirectToRoute('tasks');
 
     }
