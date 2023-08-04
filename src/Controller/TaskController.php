@@ -10,10 +10,12 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 class TaskController extends AbstractController
 {
     #[Route('/tasks', name: 'tasks')]
+    #[IsGranted("ROLE_USER")]
+
     public function index(TaskRepository $taskRepository): Response
     {
         $tasks = $taskRepository->findAll();
@@ -24,6 +26,7 @@ class TaskController extends AbstractController
     }
 
     #[Route('/tasks/create', name: 'create_task')]
+    #[IsGranted("ROLE_USER")]
     public function createTask(Request $request, TaskManager $taskManager): Response
     {
         $user = $this->getUser();
@@ -46,6 +49,7 @@ class TaskController extends AbstractController
     }
 
     #[Route('/tasks/edit/{id}', name: 'edit_task')]
+    #[IsGranted("ROLE_USER")]
     public function editTask(int $id, TaskRepository $taskRepository, Request $request, TaskManager $taskManager): Response
     {
         $task = $taskRepository->findOneBy(['id' => $id]);
@@ -66,6 +70,7 @@ class TaskController extends AbstractController
     }
 
     #[Route('/tasks/delete/{id}', name: 'delete_task')]
+    #[IsGranted("ROLE_USER")]
     public function deleteTask(int $id, TaskRepository $taskRepository): Response
     {
         $task = $taskRepository->findOneBy(['id' => $id]);
@@ -82,6 +87,7 @@ class TaskController extends AbstractController
     }
 
     #[Route('/tasks/{id}', name: 'show_task')]
+    #[IsGranted("ROLE_USER")]
     public function showTask(int $id, TaskRepository $taskRepository): Response
     {
         $task = $taskRepository->findOneBy(['id' => $id]);
