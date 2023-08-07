@@ -20,7 +20,7 @@
             </thead>
             <tbody class="bg-white">
                 {% for task in tasks %}
-                <tr class="">
+                <tr class="task">
                     <td class="text-center">{{ task.author.username }}</td>
                     <td class="text-center"><a href="{{ path('show_task', {'id' : task.id}) }}" >{{ task.title }}</a></td>
                     <td class="text-center"><a href="{{ path('edit_task', {'id' : task.id}) }}"><img src="{{ asset('build/images/edit.svg') }}"></a></td>

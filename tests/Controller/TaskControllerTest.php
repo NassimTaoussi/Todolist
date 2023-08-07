@@ -21,17 +21,19 @@ class TaskControllerTest extends WebTestCase
     public function setUp(): void
     {
         $this->client = static::createClient();
-        $this->client->disableReboot();
         $this->entityManager = static::getContainer()->get('doctrine')->getManager();
         $this->urlGenerator = $this->client->getContainer()->get('router.default');
     }
 
     public function testDisplayTasksList(): void
     {
-        $this->client->request('GET', '/tasks');
+        $user = $this->entityManager->getRepository(User::class)->findOneBy(['email' => 'nassim28500@hotmail.fr']);
+        $this->client->loginUser($user);
+        $crawler = $this->client->request('GET', '/tasks');
 
         $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('h2',"Liste de l'ensemble de vos tâches" );
+        $this->assertCount(4, $crawler->filter("tr.task"));
     }
 
     /*
