@@ -96,4 +96,13 @@ class TaskController extends AbstractController
             'task' => $task
         ]);
     }
+
+    #[Route('/tasks/toggle/{id}', name: 'task_toggle')]
+    #[IsGranted("ROLE_USER")]
+    public function toggleTask(int $id, TaskRepository $taskRepository)
+    {
+        $task = $taskRepository->findOneBy(['id' => $id]);
+        
+        
+    }
 }
