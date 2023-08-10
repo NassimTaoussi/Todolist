@@ -3,6 +3,7 @@
 namespace App\Manager;
 
 use App\Entity\Task;
+use App\Repository\TaskRepository;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Security;
@@ -13,6 +14,7 @@ final class TaskManager
     public function __construct(
         private Security $security,
         private EntityManagerInterface $entityManager,
+        private TaskRepository $taskRepository
     ) {
     }
 
@@ -31,5 +33,7 @@ final class TaskManager
     public function update($task) {
         $this->entityManager->flush();
     }
+
+
 
 }

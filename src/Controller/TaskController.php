@@ -110,6 +110,13 @@ class TaskController extends AbstractController
     {
         $task = $taskRepository->findOneBy(['id' => $id]);
         
+        if ($task->isDone() == false) {
+            $task->setIsDone(true);
+            $this->addFlash('success', sprintf('La tâche %s a bien été marquée comme "Terminée".', $task->getTitle()));
+        } else {
+            $this->addFlash('success', sprintf('La tâche %s a bien été marquée comme "A faire".', $task->getTitle()));
+        }
         
+        return $this->redirectToRoute('tasks');
     }
 }
