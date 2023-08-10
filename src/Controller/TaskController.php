@@ -75,14 +75,21 @@ class TaskController extends AbstractController
     {
         $task = $taskRepository->findOneBy(['id' => $id]);
 
-        if ($task->getAuthor() !== $this->getUser()) {
-            $this->addFlash('error', 'Vous ne pouvez pas supprimer cette tâche.');
+        if ($task->getAuthor() == $this->getUser()) {
+            $taskRepository->deleteOneTaskById($id);
+            $this->addFlash('success', 'La tâche a bien été supprimée.');
             return $this->redirectToRoute('tasks');
         }
+        else if($task->getAuthor() == null AND $this->getUser()->getRoles() === ["ROLE_ADMIN"])
+        {
+            $taskRepository->deleteOneTaskById($id);
+            $this->addFlash('success', 'La tâche a bien été supprimée.');
+            return $this->redirectToRoute('tasks');     
+        }
 
-        $taskRepository->deleteOneTaskById($id);
-        $this->addFlash('success', 'La tâche a bien été supprimée.');
+        $this->addFlash('error', 'Vous ne pouvez pas supprimer cette tâche.');
         return $this->redirectToRoute('tasks');
+
 
     }
 

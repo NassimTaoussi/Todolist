@@ -3,6 +3,7 @@
 namespace App\Tests\Controller;
 
 use App\Entity\User;
+use App\Entity\Task;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,115 +21,149 @@ class TaskControllerTest extends WebTestCase
 
     public function setUp(): void
     {
-        $this->client = static::createClient();
+        $this->client = static::createClient(); 
         $this->entityManager = static::getContainer()->get('doctrine')->getManager();
         $this->urlGenerator = $this->client->getContainer()->get('router.default');
     }
 
     public function testDisplayTasksList(): void
     {
-        $user = $this->entityManager->getRepository(User::class)->findOneBy(['email' => 'nassim28500@hotmail.fr']);
+        $user = $this->entityManager->getRepository(User::class)->findOneBy(['email' => 'admin1@email.com']);
         $this->client->loginUser($user);
         $crawler = $this->client->request('GET', '/tasks');
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorTextContains('h2',"Liste de l'ensemble de vos tâches" );
-        $this->assertCount(4, $crawler->filter("tr.task"));
+        $this->assertCount(21, $crawler->filter(".task"));
     }
 
-    /*
-    
-    public function testDisplayTasksTodoList(): void
+    // Test création d'une tâche quand utilisateur connecté
+    public function testCreateTaskUserLogged() 
     {
-        $this->client->request('GET', '/tasks/todo');
+        $user = $this->entityManager->getRepository(User::class)->findOneBy(['email' => 'admin1@email.com']);
+        $this->client->loginUser($user);
+        $crawler = $this->client->request('GET', '/tasks/create');
 
-        $this->assertResponseIsSuccessful();
-        $this->assertSelectorTextContains('h2',"Liste de l'ensemble de vos tâches à faire" );
-    }
-    
-    
-    public function testDisplayTasksDoneList(): void
-    {
-        $this->client->request('GET', '/tasks/done');
+        $form = $crawler->selectButton('Ajouter')->form();
+        $form['task[title]'] = 'Titre test';
+        $form['task[content]'] = 'Contenu test';
 
-        $this->assertResponseIsSuccessful();
-        $this->assertSelectorTextContains('h2',"Liste de l'ensemble de vos tâches terminées" );
-    }
-    
-    */
-
-    public function testShouldRaiseHttpAccessDeniedAndRedirectToLogin(): void
-    {
-        $this->client->request(Request::METHOD_GET, '/tasks/create');
-        self::assertResponseStatusCodeSame(Response::HTTP_FOUND);
-        self::assertResponseRedirects('http://localhost/login');
+        $this->client->submit($form);
+        $this->client->followRedirect('/tricks');
+        $this->assertResponseStatusCodeSame(Response::HTTP_OK);
+        $this->assertSelectorExists('h1', 'Liste des tâches');
     }
 
-    public function testCreateTask(): void 
+    // Test création d'une tâche quand formulaire non conforme
+    public function testCreateTaskUserLoggedDontWorking() 
     {
+        $user = $this->entityManager->getRepository(User::class)->findOneBy(['email' => 'admin1@email.com']);
+        $this->client->loginUser($user);
+        $crawler = $this->client->request('GET', '/tasks/create');
 
-        /** @var User $user */
-        $user = $this->entityManager->getRepository(User::class)->findOneBy(['email' => 'nassim28500@hotmail.fr']);
+        $form = $crawler->selectButton('Ajouter')->form();
+        $form['task[title]'] = 'Titre test';
+        $form['task[content]'] = '';
 
+        $this->client->submit($form);
+        $this->client->followRedirect('/tricks');
+        $this->assertResponseStatusCodeSame(Response::HTTP_OK);
+        $this->assertSelectorExists('h1', 'Liste des tâches');
+    }
+
+    // Test création d'une tâche quand utilisateur non connecté
+    public function testCreateTaskUserNotLogged()
+    {
+        $this->client->request('GET', '/tasks/create');
+        $this->assertResponseStatusCodeSame(Response::HTTP_FOUND);
+        $this->client->followRedirect('/login');
+        $this->assertResponseStatusCodeSame(Response::HTTP_OK);
+        $this->assertSelectorExists('label', 'Mot de passe');
+    }
+
+    // Test edition d'un tâche quand utilisateur connecter
+    public function testEditTaskUserLogged()
+    {
+        $admin = $this->entityManager->getRepository(User::class)->findOneBy(['email' => 'admin1@email.com']);
+        $this->client->loginUser($admin);
+
+        $task = $this->entityManager->getRepository(Task::class)->findOneBy(['author' => null])->getId();
+
+        $this->client->request('GET', '/tasks/edit/' . $task); 
+        $this->assertResponseStatusCodeSame(Response::HTTP_FOUND);
+        
+        $this->client->followRedirect('/tricks');
+        $this->assertResponseStatusCodeSame(Response::HTTP_OK);
+        $this->assertSelectorExists('h1', 'Liste des tâches');
+    }
+
+    // Test edition d'un tâche quand utilisateur non connecter
+    public function testEditTaskUserNotLogged()
+    {
+        $task = $this->entityManager->getRepository(Task::class)->findOneBy(['author' => null])->getId();
+
+        $this->client->request('GET', '/tasks/edit/' . $task); 
+        $this->assertResponseStatusCodeSame(Response::HTTP_FOUND);
+
+        $this->client->followRedirect('/tricks');
+        $this->assertResponseStatusCodeSame(Response::HTTP_OK);
+        $this->assertSelectorExists('h1', 'Liste des tâches');
+    }
+
+
+    // Test suppression d'une tâche quand utilisateur non connecté
+    public function testRemoveTaskUserNotLogged()
+    {
+        $this->client->request('GET', '/tasks/delete/5');
+        $this->assertResponseStatusCodeSame(Response::HTTP_FOUND);
+        $this->client->followRedirect('/login');
+        $this->assertResponseStatusCodeSame(Response::HTTP_OK);
+        $this->assertSelectorExists('label', 'Mot de passe');
+    }
+
+    // Test suppression d'une tâche par son auteur
+    public function testRemoveTaskByTheAuthor()
+    {
+        $user = $this->entityManager->getRepository(User::class)->findOneBy(['email' => 'admin1@email.com']);
         $this->client->loginUser($user);
 
-        $crawler = $this->client->request(Request::METHOD_GET, '/tasks/create');
-        self::assertResponseIsSuccessful();
+        $task = $this->entityManager->getRepository(Task::class)->findOneBy(['author' => $user->getId()])->getId();
 
-        /** @@phpstan-ignore-next-line */
-        $token = $crawler
-            ->filter('form[name=task]')
-            ->form()
-            ->get('task')['_token']
-            ->getValue();
+        $this->client->request('GET', '/tasks/delete/' . $task); 
+        $this->assertResponseStatusCodeSame(Response::HTTP_FOUND);
 
-        $formData = self::createFormData();
-
-        $formData['parameters']['task']['_token'] = $token;
-
-        $this->client->request(Request::METHOD_POST, '/tasks/create', $formData['parameters']);
-
-        self::assertResponseStatusCodeSame(Response::HTTP_FOUND);
-
+        $this->client->followRedirect('/tricks');
+        $this->assertResponseStatusCodeSame(Response::HTTP_OK);
+        $this->assertSelectorExists('h1', 'Liste des tâches');
     }
 
-    public function testCreateTaskDontWorking(): void
+    // Test suppression d'une tâche par un autre utilisateur
+    public function testRemoveTaskByNotTheAuthor()
     {
-        /** @var User $user */
-        $user = $this->entityManager->getRepository(User::class)->findOneBy(['email' => 'nassim28500@hotmail.fr']);
-
+        $user = $this->entityManager->getRepository(User::class)->findOneBy(['email' => 'username1@email.com']);
         $this->client->loginUser($user);
 
-        $crawler = $this->client->request(Request::METHOD_GET, '/tasks/create');
-        self::assertResponseIsSuccessful();
+        $creator = $this->entityManager->getRepository(User::class)->findOneBy(['email' => 'admin1@email.com']);
+        $task = $this->entityManager->getRepository(Task::class)->findOneBy(['author' => $creator->getId()])->getId();
 
-        /** @@phpstan-ignore-next-line */
-        $token = $crawler
-            ->filter('form[name=task]')
-            ->form()
-            ->get('task')['_token']
-            ->getValue();
+        $this->client->request('GET', '/tasks/delete/' . $task); 
 
-        $formData = self::createFormData();
-
-        $formData['parameters']['task']['_token'] = $token;
-
-        $this->client->request(Request::METHOD_POST, '/tasks/create', $formData['parameters']);
-
-        self::assertResponseStatusCodeSame(Response::HTTP_FOUND);
+        $this->client->followRedirect('/tricks');
+        $this->assertResponseStatusCodeSame(Response::HTTP_OK);
+        $this->assertSelectorExists('h1', 'Liste des tâches');
     }
 
-    private static function createFormData(
-        string $title = 'Titre',
-        string $content = 'Description',
-    ): array {
-        return [
-            'parameters' => [
-                'task' => [
-                    'titre' => $title,
-                    'description' => $content,
-                ],
-            ],
-        ];
+    // Test suppression d'une tâche par un autre utilisateur
+    public function testRemoveTaskByAdmin()
+    {
+        $admin = $this->entityManager->getRepository(User::class)->findOneBy(['email' => 'admin1@email.com']);
+        $this->client->loginUser($admin);
+
+        $task = $this->entityManager->getRepository(Task::class)->findOneBy(['author' => null])->getId();
+
+        $this->client->request('GET', '/tasks/delete/' . $task); 
+
+        $this->client->followRedirect('/tricks');
+        $this->assertResponseStatusCodeSame(Response::HTTP_OK);
+        $this->assertSelectorExists('h1', 'Liste des tâches');
     }
 }
