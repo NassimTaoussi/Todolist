@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Task;
 use App\Form\TaskType;
 use App\Manager\TaskManager;
+use App\Manager\TaskManagerInterface;
 use App\Repository\TaskRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -27,16 +28,14 @@ class TaskController extends AbstractController
 
     #[Route('/tasks/create', name: 'create_task')]
     #[IsGranted("ROLE_USER")]
-    public function createTask(Request $request, TaskManager $taskManager): Response
+    public function createTask(Request $request, TaskManagerInterface $taskManagerInterface): Response
     {
-        $user = $this->getUser();
-
         $task = new Task();
 
         $form = $this->createForm(TaskType::class, $task)->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $taskManager->add($task, $user);
+            $taskManagerInterface->add($task);
             $this->addFlash('success', 'Vous venez de créé un nouvelle tâche');
 
             return $this->redirectToRoute('tasks');
@@ -50,14 +49,13 @@ class TaskController extends AbstractController
 
     #[Route('/tasks/edit/{id}', name: 'edit_task')]
     #[IsGranted("ROLE_USER")]
-    public function editTask(int $id, TaskRepository $taskRepository, Request $request, TaskManager $taskManager): Response
+    public function editTask(Task $task, Request $request, TaskManagerInterface $taskManagerInterface): Response
     {
-        $task = $taskRepository->findOneBy(['id' => $id]);
 
         $form = $this->createForm(TaskType::class, $task)->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $taskManager->update($task);
+            $taskManagerInterface->update($task);
             $this->addFlash('success', 'Modification appliquer');
 
             return $this->redirectToRoute('tasks');
@@ -71,34 +69,17 @@ class TaskController extends AbstractController
 
     #[Route('/tasks/delete/{id}', name: 'delete_task')]
     #[IsGranted("ROLE_USER")]
-    public function deleteTask(int $id, TaskRepository $taskRepository): Response
+    public function deleteTask(Task $task, TaskManagerInterface $taskManagerInterface): Response
     {
-        $task = $taskRepository->findOneBy(['id' => $id]);
-
-        if ($task->getAuthor() == $this->getUser()) {
-            $taskRepository->deleteOneTaskById($id);
-            $this->addFlash('success', 'La tâche a bien été supprimée.');
-            return $this->redirectToRoute('tasks');
-        }
-        else if($task->getAuthor() == null AND $this->getUser()->getRoles() === ["ROLE_ADMIN"])
-        {
-            $taskRepository->deleteOneTaskById($id);
-            $this->addFlash('success', 'La tâche a bien été supprimée.');
-            return $this->redirectToRoute('tasks');     
-        }
-
-        $this->addFlash('error', 'Vous ne pouvez pas supprimer cette tâche.');
+        $taskManagerInterface->delete($task);
         return $this->redirectToRoute('tasks');
-
 
     }
 
     #[Route('/tasks/{id}', name: 'show_task')]
     #[IsGranted("ROLE_USER")]
-    public function showTask(int $id, TaskRepository $taskRepository): Response
+    public function showTask(Task $task): Response
     {
-        $task = $taskRepository->findOneBy(['id' => $id]);
-        
         return $this->render('task/show_task.html.twig', [
             'task' => $task
         ]);
@@ -106,17 +87,9 @@ class TaskController extends AbstractController
 
     #[Route('/tasks/toggle/{id}', name: 'task_toggle')]
     #[IsGranted("ROLE_USER")]
-    public function toggleTask(int $id, TaskRepository $taskRepository)
+    public function toggleTask(Task $task, TaskManagerInterface $taskManagerInterface)
     {
-        $task = $taskRepository->findOneBy(['id' => $id]);
-        
-        if ($task->isDone() == false) {
-            $task->setIsDone(true);
-            $this->addFlash('success', sprintf('La tâche %s a bien été marquée comme "Terminée".', $task->getTitle()));
-        } else {
-            $this->addFlash('success', sprintf('La tâche %s a bien été marquée comme "A faire".', $task->getTitle()));
-        }
-        
+        $taskManagerInterface->toggle($task);
         return $this->redirectToRoute('tasks');
     }
 }

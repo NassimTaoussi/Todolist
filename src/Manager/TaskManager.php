@@ -8,7 +8,7 @@ use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Security;
 
-final class TaskManager
+final class TaskManager implements TaskManagerInterface
 {
 
     public function __construct(
@@ -18,13 +18,10 @@ final class TaskManager
     ) {
     }
 
-    public function add($task, $user) {
-        //dump($user);
-        //exit();
-
+    public function add($task) {
         $task->setCreatedAt(new DateTimeImmutable());
         $task->setIsDone(false);
-        $task->setAuthor($user);
+        $task->setAuthor($this->security->getUser());
 
         $this->entityManager->persist($task);
         $this->entityManager->flush();
@@ -34,6 +31,23 @@ final class TaskManager
         $this->entityManager->flush();
     }
 
+    public function delete($task) {
+        if ($task->getAuthor() == $this->security->getUser()) {
+            $this->taskRepository->deleteOneTaskById($task->getId());
+        }
+        else if($task->getAuthor() == null && $this->security->getUser()->getRoles() === ["ROLE_ADMIN"])
+        {
+            $this->taskRepository->deleteOneTaskById($task->getId());   
+        }
+    }
 
+    public function toggle($task) {
+        if ($task->isDone() == false) {
+            $task->setIsDone(true);
+        }
+        else {
+            $task->setIsDone(false);
+        }
+    }
 
 }

@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Form\UserType;
 use App\Manager\UserManager;
+use App\Manager\UserManagerInterface;
 use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -28,14 +29,14 @@ class UserController extends AbstractController
 
     #[Route('/users/create', name: 'create_user')]
     #[IsGranted("ROLE_ADMIN")]
-    public function createUser(Request $request, UserManager $userManager): Response
+    public function createUser(Request $request, UserManagerInterface $userManagerInterface): Response
     {
         $user = new User();
 
         $form = $this->createForm(UserType::class, $user)->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $userManager->add($user);
+            $userManagerInterface->add($user);
             $this->addFlash('success', 'Vous venez de créé un nouvelle utilisateur');
 
             return $this->redirectToRoute('users');
@@ -49,14 +50,13 @@ class UserController extends AbstractController
 
     #[Route('/users/edit/{id}', name: 'edit_user')]
     #[IsGranted("ROLE_ADMIN")]
-    public function editUser(int $id, UserRepository $userRepository, Request $request, UserManager $userManager): Response
+    public function editUser(User $user, UserRepository $userRepository, Request $request, UserManagerInterface $userManagerInterface): Response
     {
-        $user = $userRepository->findOneBy(['id' => $id]);
 
         $form = $this->createForm(UserType::class, $user)->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $userManager->update($user);
+            $userManagerInterface->update($user);
             $this->addFlash('success', 'Modification appliquer');
 
             return $this->redirectToRoute('users');
@@ -70,9 +70,9 @@ class UserController extends AbstractController
 
     #[Route('/users/delete/{id}', name: 'delete_user')]
     #[IsGranted("ROLE_ADMIN")]
-    public function deleteUser(int $id, UserRepository $userRepository): Response
+    public function deleteUser(User $user, UserManagerInterface $userManagerInterface): Response
     {
-        $userRepository->deleteOneUserById($id);
+        $userManagerInterface->delete($user);
 
         return $this->redirectToRoute('users');
 
