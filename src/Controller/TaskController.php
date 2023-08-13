@@ -7,6 +7,7 @@ use App\Form\TaskType;
 use App\Manager\TaskManager;
 use App\Manager\TaskManagerInterface;
 use App\Repository\TaskRepository;
+use App\Security\Voter\TaskVoter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -48,10 +49,10 @@ class TaskController extends AbstractController
     }
 
     #[Route('/tasks/edit/{id}', name: 'edit_task')]
-    #[IsGranted("ROLE_USER")]
+    #[IsGranted(TaskVoter::TASK_EDIT, subject: 'task')]
     public function editTask(Task $task, Request $request, TaskManagerInterface $taskManagerInterface): Response
     {
-
+        //$this->denyAccessUnlessGranted(TaskVoter::TASK_EDIT, $task);
         $form = $this->createForm(TaskType::class, $task)->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -68,9 +69,10 @@ class TaskController extends AbstractController
     }
 
     #[Route('/tasks/delete/{id}', name: 'delete_task')]
-    #[IsGranted("ROLE_USER")]
+    #[IsGranted(TaskVoter::TASK_DELETE, subject: 'task')]
     public function deleteTask(Task $task, TaskManagerInterface $taskManagerInterface): Response
     {
+        //$this->denyAccessUnlessGranted(TaskVoter::TASK_DELETE, $task);
         $taskManagerInterface->delete($task);
         return $this->redirectToRoute('tasks');
 
@@ -86,9 +88,10 @@ class TaskController extends AbstractController
     }
 
     #[Route('/tasks/toggle/{id}', name: 'task_toggle')]
-    #[IsGranted("ROLE_USER")]
+    #[IsGranted(TaskVoter::TASK_TOGGLE, subject: 'task')]
     public function toggleTask(Task $task, TaskManagerInterface $taskManagerInterface)
     {
+        //$this->denyAccessUnlessGranted(TaskVoter::TASK_TOGGLE, $task) ;
         $taskManagerInterface->toggle($task);
         return $this->redirectToRoute('tasks');
     }

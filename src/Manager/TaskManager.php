@@ -32,13 +32,7 @@ final class TaskManager implements TaskManagerInterface
     }
 
     public function delete($task) {
-        if ($task->getAuthor() == $this->security->getUser()) {
-            $this->taskRepository->deleteOneTaskById($task->getId());
-        }
-        else if($task->getAuthor() == null && $this->security->getUser()->getRoles() === ["ROLE_ADMIN"])
-        {
-            $this->taskRepository->deleteOneTaskById($task->getId());   
-        }
+        $this->taskRepository->deleteOneTaskById($task->getId());
     }
 
     public function toggle($task) {

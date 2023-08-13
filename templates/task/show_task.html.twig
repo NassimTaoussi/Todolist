@@ -16,7 +16,7 @@
             </div>
 
             <div>
-                <p>{{ task.author.username }}</p>
+                <p>{{ (task.author is not null) ? task.author.username : "Inconnu" }}</p>
             </div>
 
             <div>

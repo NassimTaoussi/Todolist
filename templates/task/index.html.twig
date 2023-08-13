@@ -17,7 +17,7 @@
                     <h4 class="pull-right">
                         {% if task.isDone %}<span class="glyphicon glyphicon-ok"></span>{% else %}<span class="glyphicon glyphicon-remove"></span>{% endif %}
                     </h4>
-                    <h4><a href="{{ path('edit_task', {'id' : task.id }) }}">{{ task.title }}</a></h4>
+                    <h4><a href="{{ path('show_task', {'id' : task.id }) }}">{{ task.title }}</a></h4>
                     <p>{{ task.content }}</p>
                 </div>
                 <div>
@@ -28,6 +28,9 @@
                     </form>
                     <form action="{{ path('delete_task', {'id' : task.id }) }}">
                         <button class="btn btn-danger btn-sm pull-right">Supprimer</button>
+                    </form>
+                    <form action="{{ path('edit_task', {'id' : task.id }) }}">
+                        <button class="btn btn-warning btn-sm pull-right">Modifier</button>
                     </form>
                 </div>
             </div>
