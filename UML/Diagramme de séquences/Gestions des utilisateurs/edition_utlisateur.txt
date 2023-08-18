@@ -1,0 +1,22 @@
+@startuml
+
+actor Admin #salmon
+control Systeme #dodgerblue
+database Database #olive
+note over Admin: Status connecter
+ref over Admin: Diagramme de séquence "Liste des utilisateurs"
+
+Admin-> Systeme : Demande d'affichage de la page de modification d'un utilisateur
+Systeme -> Database : Récupère les infos d'un utilisateur
+Database -> Systeme : Renvoie les informations d'un utilisateur
+Systeme -> Admin: Affiche la page de modification
+Admin-> Systeme : Soumet les modification de l'utilisateur
+Systeme -> Systeme : Vérifie la validité du formulaire
+  alt Si formulaire valide
+    Systeme -> Database : Mise a jour en base de données
+    Systeme -> Admin: Message de confirmation
+  else
+    Systeme -> Admin: Message d'erreur
+  end
+
+@enduml

@@ -1,0 +1,33 @@
+#loginCard {
+    min-width: 22rem;
+    max-width: 22rem;
+    margin-top: 50% !important; 
+    background-image: linear-gradient(to bottom right, #E83283, coral) !important;
+}
+
+#loginCard label {
+    font-size: 1.2rem;
+}
+
+#loginCard input {
+    background-color: transparent;
+    border: 2px solid rgba(255, 255, 255, 0.897);
+    font-family: 'Roboto-Regular', sans-serif !important;
+    height: 40px !important;
+    font-size: 1.2rem;
+    padding: 20px;
+    color: white;
+}
+
+#loginCard input::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+    color: white;
+    opacity: 1; /* Firefox */
+  }
+  
+input:-ms-input-placeholder { /* Internet Explorer 10-11 */
+    color: white;
+  }
+  
+input::-ms-input-placeholder { /* Microsoft Edge */
+    color: white;
+  }

@@ -1,0 +1,48 @@
+// POPPINS
+
+@font-face {
+    font-family: 'Poppins-Bold';
+    src: url("../../fonts/Poppins/Poppins-Bold.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: 'Poppins-BoldItalic';
+    src: url("../../fonts/Poppins/Poppins-BoldItalic.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: 'Poppins-Italic';
+    src: url("../../fonts/Poppins/Poppins-Italic.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: 'Poppins-Regular';
+    src: url("../../fonts/Poppins/Poppins-Regular.ttf") format("truetype");
+}
+
+// ROBOTO
+
+@font-face {
+    font-family: 'Roboto-Bold';
+    src: url("../../fonts/Roboto/Roboto-Bold.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: 'Roboto-BoldItalic';
+    src: url("../../fonts/Roboto/Roboto-BoldItalic.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: 'Roboto-Italic';
+    src: url("../../fonts/Roboto/Roboto-Italic.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: 'Roboto-Regular';
+    src: url("../../fonts/Roboto/Roboto-Regular.ttf") format("truetype");
+}
+
+body {
+    font-family: 'Poppins-Regular', sans-serif;
+}
+  

@@ -1,0 +1,14 @@
+@startuml
+
+actor User #salmon
+control Systeme #dodgerblue
+database Database #olive
+note over User: Status connecter
+
+User -> Systeme :  Demande la liste des tasks
+Systeme -> Database : Récupération de la liste des tasks
+Database -> Systeme : Renvoie la liste des tasks
+Systeme -> User :  Renvoie la liste des tasks
+
+@enduml
+

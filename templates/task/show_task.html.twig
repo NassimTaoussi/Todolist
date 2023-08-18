@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ task.title }}{% endblock %}
+
+{% block body %}
+
+    <section class="row d-flex justify-content-center">
+        <div class="col-6 d-flex justify-content-center flex-column align-items-center mt-5">
+
+            <p>Tâche</p>
+
+            <div>
+                <p>{{ task.title }}</p>
+            </div>
+            
+            <div>
+                <p>{{ task.content }}</p>
+            </div>
+
+            <div>
+                <p>{{ (task.author is not null) ? task.author.username : "Inconnu" }}</p>
+            </div>
+
+            <div>
+                <p>{{ task.createdAt|date("m/d/Y") }}</p><br>
+            </div>
+
+        </div>
+    </section>
+
+{% endblock %}

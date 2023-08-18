@@ -1,0 +1,15 @@
+@startuml
+
+left to right direction
+:User: #lightseagreen;line:lightseagreen;line.bold;text:lightseagreen
+:Admin: #red;line:red;line.bold;text:red
+
+User<|-- Admin
+
+rectangle "Application" {
+
+User--> (Crée une task) #lightseagreen;line:lightseagreen;line.bold;text:lightseagreen
+
+(Se connecter) ..> (S'inscrire) #dodgerblue;line.dashed;text:dodgerblue : include
+(Crée une task) ..> (Se connecter) #dodgerblue;line.dashed;text:dodgerblue : include
+}

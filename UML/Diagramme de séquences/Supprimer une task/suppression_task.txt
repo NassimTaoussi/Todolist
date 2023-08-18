@@ -1,0 +1,14 @@
+@startuml
+
+actor User#salmon
+control Systeme #dodgerblue
+database Database #olive
+note over User: Status connecter
+ref over User: Diagramme de séquence "Liste des tasks"
+
+User-> Systeme : Demande de suppression d'une task
+Systeme -> Database : Suppression en base de données
+Systeme -> User: Message de confirmation
+
+
+@enduml
