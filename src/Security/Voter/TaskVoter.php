@@ -52,38 +52,21 @@ class TaskVoter extends Voter {
             case self::TASK_EDIT:
 
                 //On verifie si l'utilisateur  peut editer 
-                return $this->canEditTask($subject, $user);
+                return $user === $subject->getAuthor();
                 
                 break;
             case self::TASK_DELETE:
 
                  //On verifie si l'utilisateur peut supprimer 
-                 return $this->canDeleteTask($subject, $user);
+                 return $user === $subject->getAuthor();
                 break;
             case self::TASK_TOGGLE:
 
                 //On verifie si l'utilisateur peut marquer la tache 
-                return $this->canToggleTask($subject, $user);
+                return $user === $subject->getAuthor();
                 break;
         }
 
         return false;
-    }
-
-    private function canEditTask(Task $task, User $user)
-    {
-        // L'auteur de la tache peut modifier
-        return $user === $task->getAuthor();
-    }
-
-    private function canDeleteTask(Task $task, User $user)
-    {
-        // L'auteur de la tache peut supprimer
-        return $user === $task->getAuthor();
-    }
-    private function canToggleTask(Task $task, User $user)
-    {
-        // L'auteur peut marquer la tache
-        return $user === $task->getAuthor();
     }
 }

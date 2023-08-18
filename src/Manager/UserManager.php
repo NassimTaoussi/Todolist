@@ -19,7 +19,7 @@ final class UserManager implements UserManagerInterface
     ) {
     }
 
-    public function add(User $user) {
+    public function add(User $user): void {
         $hashedPassword = $this->passwordHasher->hashPassword(
             $user,
             $user->getPassword()
@@ -30,11 +30,11 @@ final class UserManager implements UserManagerInterface
         $this->entityManager->flush();
     }
 
-    public function update(User $user) {
+    public function update(User $user): void {
         $this->entityManager->flush();
     }
 
-    public function delete(User $user) {
+    public function delete(User $user): void {
 
         $this->userRepository->deleteOneUserById($user);
 

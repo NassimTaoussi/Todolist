@@ -18,7 +18,7 @@ final class TaskManager implements TaskManagerInterface
     ) {
     }
 
-    public function add($task) {
+    public function add(Task $task): void {
         $task->setCreatedAt(new DateTimeImmutable());
         $task->setIsDone(false);
         $task->setAuthor($this->security->getUser());
@@ -27,15 +27,15 @@ final class TaskManager implements TaskManagerInterface
         $this->entityManager->flush();
     }
 
-    public function update($task) {
+    public function update(Task $task): void {
         $this->entityManager->flush();
     }
 
-    public function delete($task) {
+    public function delete(Task $task): void {
         $this->taskRepository->deleteOneTaskById($task->getId());
     }
 
-    public function toggle($task) {
+    public function toggle(Task $task): void {
         if ($task->isDone() == false) {
             $task->setIsDone(true);
         }

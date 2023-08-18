@@ -8,11 +8,11 @@ use App\Entity\Task;
 
 interface TaskManagerInterface {
 
-    public function add(Task $task);
+    public function add(Task $task): void;
 
-    public function update(Task $task);
+    public function update(Task $task): void;
 
-    public function delete(Task $task);
+    public function delete(Task $task): void;
 
-    public function toggle(Task $task);
+    public function toggle(Task $task): void;
 }
