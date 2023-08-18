@@ -77,6 +77,27 @@ class TaskControllerTest extends WebTestCase
         $this->assertCount(21, $crawler->filter(".task"));
     }
 
+    public function testShowTaskUserNotLogged()
+    {
+        $task = $this->entityManager->getRepository(Task::class)->findOneBy(['author' => null])->getId();
+        $this->client->request('GET', '/tasks/' . $task); 
+        $this->assertResponseStatusCodeSame(Response::HTTP_FOUND);
+        $this->client->followRedirect('/login');
+        $this->assertResponseStatusCodeSame(Response::HTTP_OK);
+        $this->assertSelectorExists('label', 'Mot de passe');
+    }
+
+    public function testShowTaskUserLogged()
+    {
+        $user = $this->entityManager->getRepository(User::class)->findOneBy(['email' => 'admin1@email.com']);
+        $this->client->loginUser($user);
+
+        $task = $this->entityManager->getRepository(Task::class)->findOneBy(['author' => null])->getId();
+        $crawler = $this->client->request('GET', '/tasks/' . $task); 
+        $this->assertResponseStatusCodeSame(Response::HTTP_OK);
+        $this->assertSelectorExists('p', 'Tâche');
+    }
+
 
     // Test edition d'un tâche quand utilisateur connecter
     public function testEditTaskUserLogged()
@@ -93,7 +114,7 @@ class TaskControllerTest extends WebTestCase
         $form['task[content]'] = 'Contenu test edit';
         
         $this->client->submit($form);
-        $this->client->followRedirect('/tricks');
+        $this->client->followRedirect('/tasks');
         $this->assertResponseStatusCodeSame(Response::HTTP_OK);
         $this->assertSelectorExists('h1', 'Liste des tâches');
     }
@@ -106,9 +127,9 @@ class TaskControllerTest extends WebTestCase
         $this->client->request('GET', '/tasks/edit/' . $task); 
         $this->assertResponseStatusCodeSame(Response::HTTP_FOUND);
 
-        $this->client->followRedirect('/tricks');
+        $this->client->followRedirect('/login');
         $this->assertResponseStatusCodeSame(Response::HTTP_OK);
-        $this->assertSelectorExists('h1', 'Liste des tâches');
+        $this->assertSelectorExists('label', 'Mot de passe');
     }
 
     // Test tâche marquer comme faite quand utilisateur connecter
@@ -157,7 +178,7 @@ class TaskControllerTest extends WebTestCase
         $this->client->request('GET', '/tasks/delete/' . $task); 
         $this->assertResponseStatusCodeSame(Response::HTTP_FOUND);
 
-        $this->client->followRedirect('/tricks');
+        $this->client->followRedirect('/tasks');
         $this->assertResponseStatusCodeSame(Response::HTTP_OK);
         $this->assertSelectorExists('h1', 'Liste des tâches');
     }
@@ -170,10 +191,7 @@ class TaskControllerTest extends WebTestCase
         $task = $this->entityManager->getRepository(Task::class)->findOneBy(['author' => null])->getId();
 
         $this->client->request('GET', '/tasks/delete/' . $task); 
-
-        $this->client->followRedirect('/tricks');
-        $this->assertResponseStatusCodeSame(Response::HTTP_OK);
-        $this->assertSelectorExists('h1', 'Liste des tâches');
+        $this->assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
     }
 
     // Test suppression d'une tâche par un autre utilisateur
@@ -186,7 +204,7 @@ class TaskControllerTest extends WebTestCase
 
         $this->client->request('GET', '/tasks/delete/' . $task); 
 
-        $this->client->followRedirect('/tricks');
+        $this->client->followRedirect('/tasks');
         $this->assertResponseStatusCodeSame(Response::HTTP_OK);
         $this->assertSelectorExists('h1', 'Liste des tâches');
     }

@@ -62,7 +62,7 @@ class SecurityControllerTest extends WebTestCase
 
     public function testLogout()
     {
-        $user = $this->entityManager->getRepository(User::class)->findOneBy(['email' => 'username1@email.com']);
+        $user = $this->entityManager->getRepository(User::class)->findOneBy(['email' => 'admin4@email.com']);
         $this->client->loginUser($user);
         $this->client->request('GET', '/logout');
         $this->assertResponseStatusCodeSame(Response::HTTP_FOUND);
