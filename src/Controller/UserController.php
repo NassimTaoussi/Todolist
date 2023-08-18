@@ -50,7 +50,7 @@ class UserController extends AbstractController
 
     #[Route('/users/edit/{id}', name: 'edit_user')]
     #[IsGranted("ROLE_ADMIN")]
-    public function editUser(User $user, UserRepository $userRepository, Request $request, UserManagerInterface $userManagerInterface): Response
+    public function editUser(User $user, Request $request, UserManagerInterface $userManagerInterface): Response
     {
 
         $form = $this->createForm(UserType::class, $user)->handleRequest($request);
