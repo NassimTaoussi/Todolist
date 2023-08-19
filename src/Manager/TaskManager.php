@@ -42,6 +42,8 @@ final class TaskManager implements TaskManagerInterface
         else {
             $task->setIsDone(false);
         }
+
+        $this->entityManager->flush();
     }
 
 }

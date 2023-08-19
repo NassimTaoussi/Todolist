@@ -73,7 +73,7 @@ class UserController extends AbstractController
     public function deleteUser(User $user, UserManagerInterface $userManagerInterface): Response
     {
         $userManagerInterface->delete($user);
-
+        $this->addFlash('success', 'Utilisateur supprimer');
         return $this->redirectToRoute('users');
 
     }

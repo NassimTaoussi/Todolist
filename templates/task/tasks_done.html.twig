@@ -1,13 +1,13 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Liste des tâches{% endblock %}
+{% block title %}Liste des tâches terminer{% endblock %}
 
 {% block body %}
 
-    <h1 class="taskList text-center mt-2">Liste des tâches</h1>
+    <h1 class="taskList text-center mt-2">Liste des tâches terminer</h1>
 
     <a href="{{ path('create_task') }}" class="btn btn-info pull-rigjt w-25 mt-2">Créer une tâche</a>
-    <a href="{{ path('tasks_done') }}" class="btn btn-light pull-rigjt w-25 mt-2">Consulter les tâches terminer</a>
+    <a href="{{ path('tasks') }}" class="btn btn-light pull-rigjt w-25 mt-2">Consulter les tâches en attente</a>
 
     <section class="row">
 
