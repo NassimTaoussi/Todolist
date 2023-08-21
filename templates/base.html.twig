@@ -30,7 +30,7 @@
                         <li class="nav-item">
                             <a class="nav-link text-white" href="{{ path('tasks') }}">Tasks</a>
                         </li>
-                        {% if app.user %}
+                        {% if is_granted('ROLE_ADMIN') %}
                             <li class="nav-item">
                                 <a class="nav-link text-white" href="{{ path('users') }}">Utilisateurs</a>
                             </li>
