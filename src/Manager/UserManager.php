@@ -31,6 +31,7 @@ final class UserManager implements UserManagerInterface
     }
 
     public function update(User $user): void {
+        $user->setPassword($this->passwordHasher->hashPassword($user, $user->getPassword()));
         $this->entityManager->flush();
     }
 
