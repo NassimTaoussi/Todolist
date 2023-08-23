@@ -1,5 +1,7 @@
 # Projet Todolist de Todo&Co
 
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/ec10cb784947414db9fb9cf830dfa565)](https://app.codacy.com/gl/NassimTaoussi/todolist/dashboard?utm_source=gl&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
+
 ## Installation
 
 1. Cliquer sur le bouton "Clone" et copier le lien du repository en SSH ou HTTPS selon votre souhait.
