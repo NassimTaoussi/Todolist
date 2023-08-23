@@ -23,8 +23,15 @@ Puis utliser la commande
 7. Démarrer le serveur de Symfony: 
 `symfony server:start`
 
-8. Puis démarré webpack avec la commande 
+8. Installer les packages avec webpack
+`npm install`
+
+9. Puis démarré webpack avec la commande 
 `npm run watch`
 
-9. En cas de bugs éventuel, vider le cache avec la commande 
+10. Aller sur l'url du serveur symfony du projet, puis ensuite cliquer sur connexion :
+Pour se connecter en utilisateur : email : username1@email.com, mot de passe : "0000" 
+Pour se connecter en administrateur : email: admin1@email.com, mot de passe : "0000"
+
+11. En cas de bugs éventuel, vider le cache avec la commande 
 `php bin/console cache:clear`
